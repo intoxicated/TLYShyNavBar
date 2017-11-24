@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "TLYShyNavBar"
+  s.name         = "CHNavBar"
   s.version      = "1.1.1"
   s.summary      = "TLYShyNavBar makes your UINavigationBar expand/shrink by adding just a single line. It also comes with extension view support!"
 
@@ -81,7 +81,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/telly/TLYShyNavBar.git", :tag => "1.1.1" }
+  s.source       = { :git => "https://github.com/intoxicated/TLYShyNavBar.git", :tag => s.version.to_s }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

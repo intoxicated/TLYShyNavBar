@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0710"
+   LastUpgradeVersion = "0910"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A21BFFA31BFDCC8800F9FB54"
-               BuildableName = "TLYShyNavBar.framework"
-               BlueprintName = "TLYShyNavBar"
+               BlueprintIdentifier = "22D11EDE1FC84B6500F7D2FF"
+               BuildableName = "CHNavBar.framework"
+               BlueprintName = "CHNavBar"
                ReferencedContainer = "container:TLYShyNavBar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,26 +29,7 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A21BFF841BFDCB3E00F9FB54"
-               BuildableName = "TLYShyNavBarTests.xctest"
-               BlueprintName = "TLYShyNavBarTests"
-               ReferencedContainer = "container:TLYShyNavBar.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A21BFFA31BFDCC8800F9FB54"
-            BuildableName = "TLYShyNavBar.framework"
-            BlueprintName = "TLYShyNavBar"
-            ReferencedContainer = "container:TLYShyNavBar.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -66,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A21BFFA31BFDCC8800F9FB54"
-            BuildableName = "TLYShyNavBar.framework"
-            BlueprintName = "TLYShyNavBar"
+            BlueprintIdentifier = "22D11EDE1FC84B6500F7D2FF"
+            BuildableName = "CHNavBar.framework"
+            BlueprintName = "CHNavBar"
             ReferencedContainer = "container:TLYShyNavBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -84,9 +65,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A21BFFA31BFDCC8800F9FB54"
-            BuildableName = "TLYShyNavBar.framework"
-            BlueprintName = "TLYShyNavBar"
+            BlueprintIdentifier = "22D11EDE1FC84B6500F7D2FF"
+            BuildableName = "CHNavBar.framework"
+            BlueprintName = "CHNavBar"
             ReferencedContainer = "container:TLYShyNavBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
