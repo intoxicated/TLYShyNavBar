@@ -19,6 +19,7 @@
 @property (nonatomic, weak) TLYShyViewController *parent;
 
 @property (nonatomic, assign) BOOL hasCustomRefreshControl;
+@property (nonatomic, assign) BOOL isInverted;
 
 - (CGFloat)updateLayoutIfNeeded;
 

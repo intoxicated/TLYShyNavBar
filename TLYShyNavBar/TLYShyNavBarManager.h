@@ -76,9 +76,24 @@
  */
 @property (nonatomic) BOOL disable;
 
+/* Set YES to invert contract and expansion behavior
+ * Defaults to NO
+ */
+@property (nonatomic) BOOL isInverted;
+
+/* Set YES to trigger extension view only at top
+ * Defaults to NO
+ */
+@property (nonatomic) BOOL triggerExtensionAtTop;
+
 /* Use this to be notified about contraction and expansion events.
  */
 @property (nonatomic, weak) id<TLYShyNavBarManagerDelegate> delegate;
+
+- (void)toggle;
+- (BOOL)isExpanded;
+- (void)expand;
+- (void)contract;
 
 @end
 
@@ -90,7 +105,7 @@
 @protocol TLYShyNavBarManagerDelegate <NSObject>
 
 @optional
-
+- (void)shyNavBarManagerTransforming:(TLYShyNavBarManager *) shyNavBarManager progress:(CGFloat)progress;
 - (void)shyNavBarManagerDidBecomeFullyContracted:(TLYShyNavBarManager *) shyNavBarManager;
 - (void)shyNavBarManagerDidFinishContracting:(TLYShyNavBarManager *) shyNavBarManager;
 - (void)shyNavBarManagerDidFinishExpanding:(TLYShyNavBarManager *) shyNavBarManager;

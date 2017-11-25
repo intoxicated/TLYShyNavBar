@@ -59,7 +59,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 
         /* Initialize defaults */
         self.contracting = NO;
-        self.previousContractionState = YES;
+        self.previousContractionState = NO;
 
         self.expansionResistance = 200.f;
         self.contractionResistance = 0.f;
@@ -90,15 +90,15 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
         self.scrollViewController.parent = self.extensionController;
 
         /* Notification helpers */
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidBecomeActive:)
-                                                     name:UIApplicationDidBecomeActiveNotification
-                                                   object:nil];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidChangeStatusBarFrame:)
-                                                     name:UIApplicationDidChangeStatusBarFrameNotification
-                                                   object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(applicationDidBecomeActive:)
+//                                                     name:UIApplicationDidBecomeActiveNotification
+//                                                   object:nil];
+//
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(applicationDidChangeStatusBarFrame:)
+//                                                     name:UIApplicationDidChangeStatusBarFrameNotification
+//                                                   object:nil];
     }
     return self;
 }
@@ -116,6 +116,12 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 }
 
 #pragma mark - Properties
+
+- (void)setIsInverted:(BOOL)isInverted
+{
+    _scrollViewController.isInverted = isInverted;
+    _isInverted = isInverted;
+}
 
 - (void)setViewController:(UIViewController *)viewController
 {
@@ -247,7 +253,93 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
         return NO;
     }
 
-    return (self.isViewControllerVisible && [self _scrollViewIsSuffecientlyLong]);
+    return (self.isViewControllerVisible);
+}
+
+- (void)_handleInvertedScrolling
+{
+    if (![self _shouldHandleScrolling])
+    {
+      return;
+    }
+  
+    if (!isnan(self.previousYOffset))
+    {
+      // 1 - Calculate the delta
+      CGFloat deltaY = (self.scrollView.contentOffset.y - self.previousYOffset);
+      
+      // 2 - Ignore any scrollOffset beyond the bounds
+      CGFloat start = floorf(self.scrollView.contentSize.height - CGRectGetHeight(self.scrollView.bounds) + self.scrollView.contentInset.bottom - 0.5f);
+      if (self.previousYOffset > start)
+      {
+          deltaY = MAX(0, deltaY - self.previousYOffset + start);
+      }
+      
+      /* rounding to resolve a dumb issue with the contentOffset value */
+      CGFloat end = -self.scrollView.contentInset.top;
+      if (self.previousYOffset < end && deltaY > 0)
+      {
+          deltaY = MIN(0, deltaY - (self.previousYOffset - end));
+      }
+      
+      // 3 - Update contracting variable
+      if (fabs(deltaY) > FLT_EPSILON)
+      {
+        self.contracting = deltaY < 0;
+      }
+      
+      // 4 - Check if contracting state changed, and do stuff if so
+      if (self.contracting != self.previousContractionState)
+      {
+        [self notifyIfNeeded];
+        self.previousContractionState = self.contracting;
+        self.resistanceConsumed = 0;
+      }
+      
+      // GTH: Calculate the exact point to avoid expansion resistance
+      // CGFloat statusBarHeight = [self.statusBarController calculateTotalHeightRecursively];
+      
+      // 5 - Apply resistance
+      // 5.1 - Always apply resistance when contracting
+      if (self.contracting)
+      {
+        CGFloat availableResistance = self.contractionResistance - self.resistanceConsumed;
+        self.resistanceConsumed = MIN(self.contractionResistance, self.resistanceConsumed - deltaY);
+        
+        deltaY = MIN(0, availableResistance + deltaY);
+      }
+      // 5.2 - Only apply resistance if expanding above the status bar
+      else if (self.scrollView.contentOffset.y < 0)
+      {
+        CGFloat availableResistance = self.expansionResistance - self.resistanceConsumed;
+        self.resistanceConsumed = MIN(self.expansionResistance, self.resistanceConsumed + deltaY);
+        
+        deltaY = MAX(0, deltaY - availableResistance);
+      }
+      
+      // 6 - Update the navigation bar shyViewController
+      self.navBarController.fadeBehavior = self.fadeBehavior;
+      
+      // 7 - Inform the delegate if needed
+      CGFloat maxNavY = CGRectGetMaxY(self.navBarController.view.frame);
+      CGFloat maxExtensionY = CGRectGetMaxY(self.extensionViewContainer.frame);
+      CGFloat visibleTop;
+      if (self.extensionViewContainer.hidden) {
+        visibleTop = maxNavY;
+      } else {
+        visibleTop = MAX(maxNavY, maxExtensionY);
+      }
+      if ((self.stickyNavigationBar && visibleTop == maxNavY && maxExtensionY == 0) ||
+          visibleTop == self.statusBarController.calculateTotalHeightRecursively) {
+        if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidBecomeFullyContracted:)]) {
+          [self.delegate shyNavBarManagerDidBecomeFullyContracted:self];
+        }
+      }
+      
+      [self.navBarController updateYOffset:deltaY];
+    }
+  
+    self.previousYOffset = self.scrollView.contentOffset.y;
 }
 
 - (void)_handleScrolling
@@ -334,6 +426,19 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
     self.previousYOffset = self.scrollView.contentOffset.y;
 }
 
+- (void)notifyIfNeeded
+{
+    if (self.contracting) {
+      if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishContracting:)]) {
+        [self.delegate shyNavBarManagerDidFinishContracting:self];
+      }
+    } else if (!self.contracting){
+      if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishExpanding:)]) {
+        [self.delegate shyNavBarManagerDidFinishExpanding:self];
+      }
+    }
+}
+
 - (void)_handleScrollingEnded
 {
     if (!self.isViewControllerVisible)
@@ -359,7 +464,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
     };
 
     self.resistanceConsumed = 0;
-    [self.navBarController snap:self.contracting completion:completion];
+    //[self.navBarController snap:self.contracting completion:completion];
 }
 
 #pragma mark - KVO
@@ -425,15 +530,68 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 
 - (void)cleanup
 {
-    [self.navBarController expand];
+    //[self.navBarController expand];
     self.previousYOffset = NAN;
+}
+
+- (void)toggle
+{
+    if (self.previousContractionState) {
+      [self expand];
+    } else {
+      [self contract];
+    }
+}
+
+- (BOOL)isExpanded
+{
+    return !self.previousContractionState;
+}
+
+- (void)expand
+{
+    [self.navBarController expand];
+    self.previousContractionState = NO;
+    if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishExpanding:)]) {
+        [self.delegate shyNavBarManagerDidFinishExpanding:self];
+    }
+}
+
+- (void)contract
+{
+    [self.navBarController contract];
+    self.previousContractionState = YES;
+    if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishContracting:)]) {
+        [self.delegate shyNavBarManagerDidFinishContracting:self];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [self _handleScrolling];
+    //this causes to trigger only if at top of view
+    if (self.extensionView != nil && self.triggerExtensionAtTop) {
+      if (!self.isInverted &&
+          scrollView.contentOffset.y > self.extensionView.frame.size.height &&
+          self.previousYOffset > self.extensionView.frame.size.height) {
+        return;
+      }
+
+      if (self.isInverted &&
+          scrollView.contentOffset.y < scrollView.contentSize.height -
+          scrollView.bounds.size.height - 20 &&
+          self.previousYOffset < scrollView.contentSize.height -
+          scrollView.bounds.size.height - 20 ) {
+        return;
+      }
+    }
+  
+    if (self.isInverted) {
+        [self _handleInvertedScrolling];
+    } else {
+        [self _handleScrolling];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
