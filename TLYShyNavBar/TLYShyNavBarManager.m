@@ -291,7 +291,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
       // 4 - Check if contracting state changed, and do stuff if so
       if (self.contracting != self.previousContractionState)
       {
-        [self notifyIfNeeded];
+        //[self notifyIfNeeded];
         self.previousContractionState = self.contracting;
         self.resistanceConsumed = 0;
       }
@@ -309,7 +309,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
         deltaY = MIN(0, availableResistance + deltaY);
       }
       // 5.2 - Only apply resistance if expanding above the status bar
-      else if (self.scrollView.contentOffset.y < 0)
+      else if (self.scrollView.contentOffset.y > self.scrollView.contentSize.height - self.scrollView.bounds.size.height)
       {
         CGFloat availableResistance = self.expansionResistance - self.resistanceConsumed;
         self.resistanceConsumed = MIN(self.expansionResistance, self.resistanceConsumed + deltaY);
@@ -333,6 +333,25 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
           visibleTop == self.statusBarController.calculateTotalHeightRecursively) {
         if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidBecomeFullyContracted:)]) {
           [self.delegate shyNavBarManagerDidBecomeFullyContracted:self];
+        }
+      }
+
+      if ([self.delegate respondsToSelector:@selector(shyNavBarManagerTransforming:progress:)]) {
+        //0 contract -> 100 expand
+        CGFloat progress = maxExtensionY / CGRectGetHeight(self.extensionViewContainer.frame);
+        [self.delegate shyNavBarManagerTransforming:self progress:progress];
+      }
+      
+      CGFloat triggerPoint = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
+      if (self.isInverted &&
+          self.triggerExtensionAtTop &&
+          ((self.scrollView.contentOffset.y < triggerPoint &&
+          self.previousYOffset < triggerPoint) || triggerPoint < 0)) {
+        if (CGRectGetMaxY(self.extensionViewContainer.frame) == CGRectGetHeight(self.extensionViewContainer.frame)) {
+          deltaY = MAX(maxNavY, maxExtensionY);
+        }
+        else if (CGRectGetMaxY(self.extensionViewContainer.frame) <= 0) {
+          deltaY = MIN(0, maxExtensionY);
         }
       }
       
@@ -419,7 +438,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
                 [self.delegate shyNavBarManagerDidBecomeFullyContracted:self];
             }
         }
-
+      
         [self.navBarController updateYOffset:deltaY];
     }
 
@@ -445,25 +464,38 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
     {
         return;
     }
-
+  
     __weak __typeof(self) weakSelf = self;
     void (^completion)() = ^
     {
-        __typeof(self) strongSelf = weakSelf;
-        if (strongSelf) {
-            if (strongSelf.contracting) {
-                if ([strongSelf.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishContracting:)]) {
-                    [strongSelf.delegate shyNavBarManagerDidFinishContracting:strongSelf];
-                }
-            } else {
-                if ([strongSelf.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishExpanding:)]) {
-                    [strongSelf.delegate shyNavBarManagerDidFinishExpanding:strongSelf];
-                }
-            }
-        }
+      __typeof(self) strongSelf = weakSelf;
+      if (CGRectGetMaxY(strongSelf.extensionViewContainer.frame) == CGRectGetHeight(strongSelf.extensionViewContainer.frame)) {
+          if ([strongSelf.delegate respondsToSelector:@selector(shyNavBarManagerDidBecomeFullyExpanded:)]) {
+              [strongSelf.delegate shyNavBarManagerDidBecomeFullyExpanded:strongSelf];
+          }
+          return;
+      }
+      else if(CGRectGetMaxY(strongSelf.extensionViewContainer.frame) == 0) {
+          if ([strongSelf.delegate respondsToSelector:@selector(shyNavBarManagerDidBecomeFullyContracted:)]) {
+            [strongSelf.delegate shyNavBarManagerDidBecomeFullyContracted:strongSelf];
+          }
+          return;
+      }
     };
 
     self.resistanceConsumed = 0;
+    if (self.contracting) {
+      if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishContracting:)]) {
+        [self.delegate shyNavBarManagerDidFinishContracting:self];
+      }
+    } else if(CGRectGetMaxY(self.extensionViewContainer.frame) > 0) {
+      if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishExpanding:)]) {
+        [self.delegate shyNavBarManagerDidFinishExpanding:self];
+      }
+    }
+  
+    completion();
+    //do not want to snap
     //[self.navBarController snap:self.contracting completion:completion];
 }
 
@@ -476,9 +508,14 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 {
     if (context == kTLYShyNavBarManagerKVOContext)
     {
-        if (self.isViewControllerVisible && ![self _scrollViewIsSuffecientlyLong])
+        if (self.isViewControllerVisible &&
+            ![self _scrollViewIsSuffecientlyLong] &&
+            !self.disable &&
+            !self.triggerExtensionAtTop)
         {
-            [self.navBarController expand];
+            //disable sticky or at least delegate
+            //[self.navBarController expand];
+            [self expand:NO];
         }
     }
     else
@@ -498,6 +535,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 
         CGRect bounds = view.frame;
         bounds.origin = CGPointZero;
+        bounds.origin.y = self.hideExtension ? -CGRectGetHeight(view.frame) : 0;
 
         view.frame = bounds;
 
@@ -523,7 +561,7 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 {
     if (fabs([self.scrollViewController updateLayoutIfNeeded]) > FLT_EPSILON)
     {
-        [self.navBarController expand];
+        //[self.navBarController expand];
         [self.extensionViewContainer.superview bringSubviewToFront:self.extensionViewContainer];
     }
 }
@@ -534,32 +572,65 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
     self.previousYOffset = NAN;
 }
 
-- (void)toggle
+- (void)toggle:(BOOL)animated
 {
-    if (self.previousContractionState) {
-      [self expand];
+    if (![self isExpanded]) {
+      [self expand:animated];
     } else {
-      [self contract];
+      [self contract:animated];
     }
 }
 
 - (BOOL)isExpanded
 {
-    return !self.previousContractionState;
+    return CGRectGetMaxY(self.extensionViewContainer.frame) == CGRectGetHeight(self.extensionViewContainer.frame);
 }
 
-- (void)expand
+- (void)expand:(BOOL)animated
 {
+    if (animated) {
+      [UIView animateWithDuration:0.2 animations:^{
+          [self.navBarController expand];
+          [self.scrollViewController updateLayoutIfNeeded];
+          self.disable = true;
+      } completion:^(BOOL finished) {
+          self.previousContractionState = NO;
+          if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishExpanding:)]) {
+            [self.delegate shyNavBarManagerDidFinishExpanding:self];
+          }
+          self.disable = false;
+      }];
+      
+      return;
+    }
+
     [self.navBarController expand];
+    [self.scrollViewController updateLayoutIfNeeded];
     self.previousContractionState = NO;
     if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishExpanding:)]) {
         [self.delegate shyNavBarManagerDidFinishExpanding:self];
     }
 }
 
-- (void)contract
+- (void)contract:(BOOL)animated
 {
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [self.navBarController contract];
+            [self.scrollViewController updateLayoutIfNeeded];
+            self.disable = true;
+        } completion:^(BOOL finished) {
+            self.previousContractionState = YES;
+            if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishContracting:)]) {
+              [self.delegate shyNavBarManagerDidFinishContracting:self];
+            }
+            self.disable = false;
+        }];
+      return;
+    }
+  
     [self.navBarController contract];
+    [self.scrollViewController updateLayoutIfNeeded];
     self.previousContractionState = YES;
     if ([self.delegate respondsToSelector:@selector(shyNavBarManagerDidFinishContracting:)]) {
         [self.delegate shyNavBarManagerDidFinishContracting:self];
@@ -570,21 +641,23 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    //this causes to trigger only if at top of view
-    if (self.extensionView != nil && self.triggerExtensionAtTop) {
-      if (!self.isInverted &&
-          scrollView.contentOffset.y > self.extensionView.frame.size.height &&
-          self.previousYOffset > self.extensionView.frame.size.height) {
+    //this causes to stop inapporpriate position
+//    if (self.extensionView != nil && self.triggerExtensionAtTop) {
+//      if (!self.isInverted && scrollView.contentOffset.y > self.extensionView.frame.size.height && self.previousYOffset > self.extensionView.frame.size.height) {
+//        self.previousYOffset = scrollView.contentOffset.y;
+//        return;
+//      }
+//
+//      CGFloat end = scrollView.contentSize.height - scrollView.bounds.size.height - 50;
+//      if (self.isInverted && scrollView.contentOffset.y < end && self.previousYOffset < end) {
+//        self.previousYOffset = scrollView.contentOffset.y;
+//        return;
+//      }
+//    }
+  
+    if (self.disable) {
+        self.previousYOffset = scrollView.contentOffset.y;
         return;
-      }
-
-      if (self.isInverted &&
-          scrollView.contentOffset.y < scrollView.contentSize.height -
-          scrollView.bounds.size.height - 20 &&
-          self.previousYOffset < scrollView.contentSize.height -
-          scrollView.bounds.size.height - 20 ) {
-        return;
-      }
     }
   
     if (self.isInverted) {

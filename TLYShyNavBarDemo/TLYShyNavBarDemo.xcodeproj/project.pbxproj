@@ -310,6 +310,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Telly, Inc.";
 				TargetAttributes = {
+					828F571B1949C37B009EB8DD = {
+						DevelopmentTeam = F89FJG7BEE;
+					};
 					828F573C1949C37B009EB8DD = {
 						TestTargetID = 828F571B1949C37B009EB8DD;
 					};
@@ -501,6 +504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = F89FJG7BEE;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TLYShyNavBarDemo/TLYShyNavBarDemo-Prefix.pch";
 				INFOPLIST_FILE = "TLYShyNavBarDemo/TLYShyNavBarDemo-Info.plist";
@@ -516,6 +520,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = F89FJG7BEE;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TLYShyNavBarDemo/TLYShyNavBarDemo-Prefix.pch";
 				INFOPLIST_FILE = "TLYShyNavBarDemo/TLYShyNavBarDemo-Info.plist";

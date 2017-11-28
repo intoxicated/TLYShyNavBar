@@ -21,9 +21,29 @@
         bounds.origin.y -= offsetDelta;
         self.bounds = bounds;
     }
-    
+
     self.contentInset = contentInsets;
     self.scrollIndicatorInsets = contentInsets;
+}
+
+- (void)tly_setInsets2:(UIEdgeInsets)contentInsets
+{
+  if (!self.isDragging && !self.isDecelerating && contentInsets.bottom != self.contentInset.bottom)
+  {
+    //only if it hits bottom
+    CGFloat triggerMargin = 30.0f;
+    if (self.contentOffset.y + triggerMargin >= self.contentSize.height - self.frame.size.height)
+    {
+      CGFloat offsetDelta = contentInsets.bottom - self.contentInset.bottom;
+      
+      CGRect bounds = self.bounds;
+      bounds.origin.y += offsetDelta;
+      self.bounds = bounds;
+    }
+  }
+  
+  self.contentInset = contentInsets;
+  self.scrollIndicatorInsets = contentInsets;
 }
 
 @end

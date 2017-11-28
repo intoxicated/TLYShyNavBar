@@ -46,7 +46,7 @@
         }
 
         if (!self.hasCustomRefreshControl && (self.refreshControl == nil || [self.refreshControl isHidden])) {
-            [self.scrollView tly_setInsets:insets];
+            [self.scrollView tly_setInsets2:insets];
         }
 
         return delta;

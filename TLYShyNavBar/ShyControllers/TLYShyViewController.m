@@ -210,7 +210,7 @@
     __block CGFloat deltaY;
     [UIView animateWithDuration:0.2 animations:^
     {
-        if ((contract && self.subShyController.contracted) || (!contract && !self.expanded))
+        if (contract || (!contract && !self.expanded))
         {
             deltaY = [self contract];
         }

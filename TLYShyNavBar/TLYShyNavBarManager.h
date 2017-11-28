@@ -86,14 +86,16 @@
  */
 @property (nonatomic) BOOL triggerExtensionAtTop;
 
+@property (nonatomic) BOOL hideExtension;
+
 /* Use this to be notified about contraction and expansion events.
  */
 @property (nonatomic, weak) id<TLYShyNavBarManagerDelegate> delegate;
 
-- (void)toggle;
+- (void)toggle:(BOOL)animated;
 - (BOOL)isExpanded;
-- (void)expand;
-- (void)contract;
+- (void)expand:(BOOL)animated;
+- (void)contract:(BOOL)animated;
 
 @end
 
@@ -106,6 +108,7 @@
 
 @optional
 - (void)shyNavBarManagerTransforming:(TLYShyNavBarManager *) shyNavBarManager progress:(CGFloat)progress;
+- (void)shyNavBarManagerDidBecomeFullyExpanded:(TLYShyNavBarManager *) shyNavBarManager;
 - (void)shyNavBarManagerDidBecomeFullyContracted:(TLYShyNavBarManager *) shyNavBarManager;
 - (void)shyNavBarManagerDidFinishContracting:(TLYShyNavBarManager *) shyNavBarManager;
 - (void)shyNavBarManagerDidFinishExpanding:(TLYShyNavBarManager *) shyNavBarManager;
