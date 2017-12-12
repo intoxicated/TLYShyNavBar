@@ -495,8 +495,11 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
     }
   
     completion();
-    //do not want to snap
-    //[self.navBarController snap:self.contracting completion:completion];
+    //snap only if
+    if (CGRectGetMaxY(self.extensionViewContainer.frame) < CGRectGetHeight(self.extensionViewContainer.frame) &&
+        CGRectGetMaxY(self.extensionViewContainer.frame) > 0) {
+      [self.navBarController snap:self.contracting completion:completion];
+    }
 }
 
 #pragma mark - KVO

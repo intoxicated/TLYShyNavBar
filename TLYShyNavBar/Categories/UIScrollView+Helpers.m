@@ -31,7 +31,7 @@
   if (!self.isDragging && !self.isDecelerating && contentInsets.bottom != self.contentInset.bottom)
   {
     //only if it hits bottom
-    CGFloat triggerMargin = 30.0f;
+    CGFloat triggerMargin = 10.0f;
     if (self.contentOffset.y + triggerMargin >= self.contentSize.height - self.frame.size.height)
     {
       CGFloat offsetDelta = contentInsets.bottom - self.contentInset.bottom;
