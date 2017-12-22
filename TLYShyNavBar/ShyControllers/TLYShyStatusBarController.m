@@ -52,11 +52,26 @@ static inline CGFloat AACStatusBarHeight(UIViewController *viewController)
      * When there is a larger than 20 pixel status bar (e.g. a phone call is in progress or GPS is active), the center needs
      * to shift up 20 pixels to avoid this 'dead space' being visible above the usual nav bar.
      */
-    if (statusBarHeight > 20)
-    {
+    /* Since iPhone X's normal status bar is 44 pixels, it has to be handled seperately from other devices
+     */
+  
+    if([[UIDevice currentDevice]userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 2436:
+            //it appears not be changed and fixed with 44
+            break;
+        default:
+            if (statusBarHeight > 20) {
+              statusBarHeight -= 20;
+            }
+            break;
+        }
+    } else {
+      if (statusBarHeight > 20) {
         statusBarHeight -= 20;
+      }
     }
-    
+      
     return statusBarHeight;
 }
 
