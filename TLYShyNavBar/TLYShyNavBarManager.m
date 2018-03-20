@@ -343,15 +343,11 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
       }
       
       CGFloat triggerPoint = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
-      if (self.isInverted &&
-          self.triggerExtensionAtTop &&
-          ((self.scrollView.contentOffset.y < triggerPoint &&
-          self.previousYOffset < triggerPoint) || triggerPoint < 0)) {
-        if (CGRectGetMaxY(self.extensionViewContainer.frame) == CGRectGetHeight(self.extensionViewContainer.frame)) {
-          deltaY = MAX(maxNavY, maxExtensionY);
-        }
-        else if (CGRectGetMaxY(self.extensionViewContainer.frame) <= 0) {
+      if (self.isInverted && self.triggerExtensionAtTop && (self.previousYOffset < triggerPoint || triggerPoint < 0)) {
+        if (CGRectGetMaxY(self.extensionViewContainer.frame) <= 0 || self.scrollView.contentOffset.y < triggerPoint) {
           deltaY = MIN(0, maxExtensionY);
+        } else if (CGRectGetMaxY(self.extensionViewContainer.frame) == CGRectGetHeight(self.extensionViewContainer.frame)) {
+          deltaY = MAX(maxNavY, maxExtensionY);
         }
       }
       
