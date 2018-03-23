@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "CHNavBar"
-  s.version      = "1.1.6"
+  s.version      = "1.1.8"
   s.summary      = "TLYShyNavBar makes your UINavigationBar expand/shrink by adding just a single line. It also comes with extension view support!"
 
   s.description  = <<-DESC
@@ -92,7 +92,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "TLYShyNavBar/**/*"
+  s.source_files  = "TLYShyNavBar/**/*.{h,m}"
   s.exclude_files = ""
 
   s.public_header_files = "TLYShyNavBar/*.h"
