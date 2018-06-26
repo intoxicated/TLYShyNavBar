@@ -593,10 +593,6 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 
 - (void)expand:(BOOL)animated
 {
-    if (!self.previousContractionState) {
-      return;
-    }
-  
     if (animated) {
       [UIView animateWithDuration:0.2 animations:^{
           [self.navBarController expand];
@@ -623,10 +619,6 @@ static void * const kTLYShyNavBarManagerKVOContext = (void*)&kTLYShyNavBarManage
 
 - (void)contract:(BOOL)animated
 {
-    if (self.previousContractionState) {
-      return;
-    }
-  
     if (animated) {
         [UIView animateWithDuration:0.2 animations:^{
             [self.navBarController contract];
