@@ -6,10 +6,10 @@
 #import <Foundation/Foundation.h>
 
 //! Project version number for TLYShyNavBar.
-FOUNDATION_EXPORT double TLYShyNavBarVersionNumber;
+FOUNDATION_EXPORT double CHNavBarVersionNumber;
 
 //! Project version string for TLYShyNavBar.
-FOUNDATION_EXPORT const unsigned char TLYShyNavBarVersionString[];
+FOUNDATION_EXPORT const unsigned char CHNavBarVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <TLYShyNavBar/PublicHeader.h>
 #import <CHNavBar/TLYShyNavBarManager.h>

@@ -26,16 +26,15 @@
 		22D11EF51FC84B6500F7D2FF /* TLYShyParent.h in Headers */ = {isa = PBXBuildFile; fileRef = A21BFFF61BFDD41100F9FB54 /* TLYShyParent.h */; };
 		22D11EFF1FC84EE600F7D2FF /* TLYShyNavBarFade.h in Headers */ = {isa = PBXBuildFile; fileRef = A21B00051BFDD41900F9FB54 /* TLYShyNavBarFade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22D11F001FC84EE600F7D2FF /* TLYShyNavBarManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A21B00061BFDD41900F9FB54 /* TLYShyNavBarManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22D11F011FC84EE600F7D2FF /* TLYShyNavBar.h in Headers */ = {isa = PBXBuildFile; fileRef = A21BFFA61BFDCC8800F9FB54 /* TLYShyNavBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		22D11F011FC84EE600F7D2FF /* CHNavBar.h in Headers */ = {isa = PBXBuildFile; fileRef = A21BFFA61BFDCC8800F9FB54 /* CHNavBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		22D11EFA1FC84B6500F7D2FF /* CHNavBar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CHNavBar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		22D11EFB1FC84B6600F7D2FF /* TLYShyNavBar copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TLYShyNavBar copy-Info.plist"; path = "/Users/R3alFr3e/Developments/TLYShyNavBar/TLYShyNavBar copy-Info.plist"; sourceTree = "<absolute>"; };
 		A21B00051BFDD41900F9FB54 /* TLYShyNavBarFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLYShyNavBarFade.h; sourceTree = "<group>"; };
 		A21B00061BFDD41900F9FB54 /* TLYShyNavBarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLYShyNavBarManager.h; sourceTree = "<group>"; };
 		A21B00071BFDD41900F9FB54 /* TLYShyNavBarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLYShyNavBarManager.m; sourceTree = "<group>"; };
-		A21BFFA61BFDCC8800F9FB54 /* TLYShyNavBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLYShyNavBar.h; sourceTree = "<group>"; };
+		A21BFFA61BFDCC8800F9FB54 /* CHNavBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CHNavBar.h; sourceTree = "<group>"; };
 		A21BFFA81BFDCC8800F9FB54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A21BFFE51BFDD40800F9FB54 /* NSObject+TLYSwizzlingHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+TLYSwizzlingHelpers.h"; path = "Categories/NSObject+TLYSwizzlingHelpers.h"; sourceTree = "<group>"; };
 		A21BFFE61BFDD40800F9FB54 /* NSObject+TLYSwizzlingHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+TLYSwizzlingHelpers.m"; path = "Categories/NSObject+TLYSwizzlingHelpers.m"; sourceTree = "<group>"; };
@@ -71,12 +70,11 @@
 			children = (
 				22D11EFA1FC84B6500F7D2FF /* CHNavBar.framework */,
 				A21BFFAC1BFDCCE000F9FB54 /* Products */,
-				A21BFFA51BFDCC8800F9FB54 /* TLYShyNavBar */,
-				22D11EFB1FC84B6600F7D2FF /* TLYShyNavBar copy-Info.plist */,
+				A21BFFA51BFDCC8800F9FB54 /* CHNavBar */,
 			);
 			sourceTree = "<group>";
 		};
-		A21BFFA51BFDCC8800F9FB54 /* TLYShyNavBar */ = {
+		A21BFFA51BFDCC8800F9FB54 /* CHNavBar */ = {
 			isa = PBXGroup;
 			children = (
 				A21B00051BFDD41900F9FB54 /* TLYShyNavBarFade.h */,
@@ -84,10 +82,10 @@
 				A21B00071BFDD41900F9FB54 /* TLYShyNavBarManager.m */,
 				A21BFFDE1BFDD1A500F9FB54 /* Categories */,
 				A21BFFCD1BFDD18D00F9FB54 /* ShyControllers */,
-				A21BFFA61BFDCC8800F9FB54 /* TLYShyNavBar.h */,
+				A21BFFA61BFDCC8800F9FB54 /* CHNavBar.h */,
 				A21BFFAD1BFDCD5100F9FB54 /* Supporting Files */,
 			);
-			path = TLYShyNavBar;
+			path = CHNavBar;
 			sourceTree = "<group>";
 		};
 		A21BFFAC1BFDCCE000F9FB54 /* Products */ = {
@@ -144,7 +142,7 @@
 			files = (
 				22D11EFF1FC84EE600F7D2FF /* TLYShyNavBarFade.h in Headers */,
 				22D11F001FC84EE600F7D2FF /* TLYShyNavBarManager.h in Headers */,
-				22D11F011FC84EE600F7D2FF /* TLYShyNavBar.h in Headers */,
+				22D11F011FC84EE600F7D2FF /* CHNavBar.h in Headers */,
 				22D11EEA1FC84B6500F7D2FF /* NSObject+TLYSwizzlingHelpers.h in Headers */,
 				22D11EED1FC84B6500F7D2FF /* TLYShyStatusBarController.h in Headers */,
 				22D11EEE1FC84B6500F7D2FF /* UIViewController+BetterLayoutGuides.h in Headers */,
@@ -186,7 +184,7 @@
 			attributes = {
 				LastUpgradeCheck = 0710;
 			};
-			buildConfigurationList = A21BFF751BFDCB3E00F9FB54 /* Build configuration list for PBXProject "TLYShyNavBar" */;
+			buildConfigurationList = A21BFF751BFDCB3E00F9FB54 /* Build configuration list for PBXProject "CHNavBar" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -240,7 +238,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "TLYShyNavBar copy-Info.plist";
+				INFOPLIST_FILE = CHNavBar/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -258,7 +256,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "TLYShyNavBar copy-Info.plist";
+				INFOPLIST_FILE = CHNavBar/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -368,7 +366,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A21BFF751BFDCB3E00F9FB54 /* Build configuration list for PBXProject "TLYShyNavBar" */ = {
+		A21BFF751BFDCB3E00F9FB54 /* Build configuration list for PBXProject "CHNavBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A21BFF8D1BFDCB3E00F9FB54 /* Debug */,
